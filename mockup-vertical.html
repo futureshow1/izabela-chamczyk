@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCKUP — Izabela Chamczyk — Wersja z pionowymi napisami</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Cardo', Georgia, serif;
+      color: #666;
+      background: #f5e6e0;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    .wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      padding: 0 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    }
+
+    /* HEADER */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 0 15px;
+    }
+    .site-title a {
+      font-size: 35px;
+      font-weight: 700;
+      color: #666;
+      letter-spacing: 0.5px;
+    }
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 8px;
+    }
+    .main-nav a {
+      font-size: 15px;
+      color: #303030;
+      padding: 4px 6px;
+      transition: color 0.3s;
+    }
+    .main-nav a:hover { color: #888; }
+
+    /* SLIDER */
+    .slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      aspect-ratio: 3 / 2;
+      background: #eee;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* === VERTICAL STRINGS — NEW DESIGN === */
+    .v-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 0 0 40px;
+    }
+
+    .v-category {
+      position: relative;
+      display: flex;
+      overflow: hidden;
+      height: 220px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .v-category:last-child {
+      border-bottom: none;
+    }
+
+    /* Vertical label strip */
+    .v-label {
+      width: 48px;
+      min-width: 48px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+      transition: width 0.4s ease, background 0.4s ease;
+    }
+
+    .v-label span {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #999;
+      white-space: nowrap;
+      transition: color 0.4s ease, letter-spacing 0.4s ease;
+    }
+
+    .v-category:hover .v-label {
+      background: #c44;
+      width: 52px;
+    }
+    .v-category:hover .v-label span {
+      color: #fff;
+      letter-spacing: 5px;
+    }
+
+    /* Number */
+    .v-number {
+      position: absolute;
+      top: 8px;
+      left: 0;
+      width: 48px;
+      text-align: center;
+      font-size: 10px;
+      color: #555;
+      font-weight: 700;
+      z-index: 3;
+    }
+
+    /* Image area */
+    .v-image {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .v-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease, filter 0.6s ease;
+      filter: brightness(0.85);
+    }
+
+    .v-category:hover .v-image img {
+      transform: scale(1.05);
+      filter: brightness(1);
+    }
+
+    /* Overlay info on image */
+    .v-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px 25px 20px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      z-index: 2;
+    }
+
+    .v-info h3 {
+      font-size: 22px;
+      color: #fff;
+      font-weight: 400;
+      font-style: italic;
+      margin-bottom: 4px;
+      transform: translateY(5px);
+      opacity: 0.9;
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+
+    .v-info .v-count {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: transform 0.4s ease 0.05s, opacity 0.4s ease 0.05s;
+    }
+
+    .v-category:hover .v-info h3 {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    .v-category:hover .v-info .v-count {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Right vertical accent line */
+    .v-accent {
+      width: 3px;
+      min-width: 3px;
+      background: transparent;
+      transition: background 0.4s ease;
+    }
+    .v-category:hover .v-accent {
+      background: #c44;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      border-top: 1px solid #ddd;
+      padding: 25px 0;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* MOCKUP badge */
+    .mockup-badge {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #c44;
+      color: #fff;
+      padding: 8px 18px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      z-index: 9999;
+      border-radius: 2px;
+      box-shadow: 0 2px 15px rgba(200,50,50,0.3);
+    }
+
+    /* Comparison note */
+    .compare-note {
+      background: #f9f4f2;
+      border: 1px solid #e8d8d4;
+      padding: 20px 25px;
+      margin: 25px 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #666;
+    }
+    .compare-note strong { color: #333; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .v-category { height: 160px; }
+      .v-label { width: 36px; min-width: 36px; }
+      .v-label span { font-size: 10px; letter-spacing: 3px; }
+      .v-number { width: 36px; font-size: 9px; }
+      .v-info h3 { font-size: 18px; }
+      .site-title a { font-size: 26px; }
+      .main-nav { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .v-category { height: 130px; }
+      .v-label { width: 30px; min-width: 30px; }
+      .v-label span { font-size: 9px; letter-spacing: 2px; }
+      .v-info { padding: 20px 15px 15px; }
+      .v-info h3 { font-size: 16px; }
+      .site-title a { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mockup-badge">MOCKUP</div>
+
+<div class="wrapper">
+  <header class="site-header">
+    <nav class="main-nav">
+      <ul>
+        <li><a href="#">Prace</a></li>
+        <li><a href="#">Akcje</a></li>
+        <li><a href="#">Aktualności</a></li>
+        <li><a href="#">Bio</a></li>
+        <li><a href="#">Kontakt</a></li>
+        <li><a href="#">English</a></li>
+      </ul>
+    </nav>
+    <div class="site-title">
+      <a href="#">Izabela Chamczyk</a>
+    </div>
+  </header>
+
+  <!-- SLIDER — same as current -->
+  <div class="slider">
+    <img src="images/slider-1-malarstwo.jpg" alt="Slider" style="width:100%;height:100%;object-fit:cover;">
+  </div>
+
+  <div class="compare-note">
+    <strong>MOCKUP:</strong> Poniżej — kategorie z pionowymi napisami (vertical strings).
+    Każda kategoria to poziomy pas z czarnym paskiem po lewej, w którym nazwa jest napisana pionowo.
+    Najedź myszką, żeby zobaczyć efekt hover.
+  </div>
+
+  <!-- VERTICAL STRINGS CATEGORIES -->
+  <div class="v-categories">
+
+    <a class="v-category" href="malarstwo.html">
+      <div class="v-number">01</div>
+      <div class="v-label"><span>Malarstwo</span></div>
+      <div class="v-image">
+        <img src="images/cat-malarstwo.png" alt="Malarstwo">
+        <div class="v-info">
+          <h3>Malarstwo</h3>
+          <div class="v-count">86 prac</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="performance.html">
+      <div class="v-number">02</div>
+      <div class="v-label"><span>Performance</span></div>
+      <div class="v-image">
+        <img src="images/cat-performance.png" alt="Performance">
+        <div class="v-info">
+          <h3>Performance</h3>
+          <div class="v-count">40 prac</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="video.html">
+      <div class="v-number">03</div>
+      <div class="v-label"><span>Video</span></div>
+      <div class="v-image">
+        <img src="images/cat-video.png" alt="Video">
+        <div class="v-info">
+          <h3>Video</h3>
+          <div class="v-count">12 prac</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="instalacje.html">
+      <div class="v-number">04</div>
+      <div class="v-label"><span>Instalacje</span></div>
+      <div class="v-image">
+        <img src="images/cat-instalacje.png" alt="Instalacje">
+        <div class="v-info">
+          <h3>Instalacje</h3>
+          <div class="v-count">6 prac</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="fotografia.html">
+      <div class="v-number">05</div>
+      <div class="v-label"><span>Fotografia</span></div>
+      <div class="v-image">
+        <img src="images/cat-fotografia.png" alt="Fotografia">
+        <div class="v-info">
+          <h3>Fotografia</h3>
+          <div class="v-count">4 prace</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="wojna.html">
+      <div class="v-number">06</div>
+      <div class="v-label"><span>Wojna 12M</span></div>
+      <div class="v-image">
+        <img src="images/cat-wojna.png" alt="Wojna Dwunastomiesięczna">
+        <div class="v-info">
+          <h3>Wojna Dwunastomiesięczna</h3>
+          <div class="v-count">11 prac</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+    <a class="v-category" href="warsztaty.html">
+      <div class="v-number">07</div>
+      <div class="v-label"><span>Warsztaty</span></div>
+      <div class="v-image">
+        <img src="images/cat-warsztaty.png" alt="Warsztaty">
+        <div class="v-info">
+          <h3>Warsztaty</h3>
+          <div class="v-count">3 prace</div>
+        </div>
+      </div>
+      <div class="v-accent"></div>
+    </a>
+
+  </div>
+
+  <footer class="site-footer">
+    &copy; 2026 / Izabela Chamczyk / Credits
+  </footer>
+</div>
+
+</body>
+</html>
