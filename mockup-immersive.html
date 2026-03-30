@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izabela Chamczyk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f5f0ec;
+      --text: #1a1a1a;
+      --muted: #999;
+      --accent: #c44;
+      --dim: #ddd;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Cardo', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a { color: inherit; text-decoration: none; cursor: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== CUSTOM CURSOR ===== */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 1.5px solid var(--text);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease,
+                  background 0.3s ease, transform 0.3s ease;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: difference;
+    }
+    .cursor.hover {
+      width: 60px;
+      height: 60px;
+      background: rgba(26, 26, 26, 0.08);
+      border-color: var(--accent);
+    }
+    .cursor.nav-hover {
+      width: 10px;
+      height: 10px;
+      background: var(--text);
+    }
+
+    /* ===== FILM GRAIN ===== */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      animation: grain 0.5s steps(6) infinite;
+    }
+    @keyframes grain {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-5%, -10%); }
+      30% { transform: translate(3%, -15%); }
+      50% { transform: translate(12%, 9%); }
+      70% { transform: translate(9%, 4%); }
+      90% { transform: translate(-1%, 7%); }
+    }
+
+    /* ===== TOP NAV ===== */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      mix-blend-mode: difference;
+    }
+    .top-nav .logo {
+      font-size: 13px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #f0ece8;
+    }
+    .top-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+    .top-nav a {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f0ece8;
+      transition: opacity 0.3s;
+      position: relative;
+    }
+    .top-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: #f0ece8;
+      transition: width 0.3s ease;
+    }
+    .top-nav a:hover::after { width: 100%; }
+    .top-nav a:hover { opacity: 0.7; }
+    /* Nav switches to dark on light background */
+    .top-nav.scrolled .logo { color: var(--text); }
+    .top-nav.scrolled a { color: var(--text); }
+    .top-nav.scrolled a::after { background: var(--text); }
+    .top-nav.scrolled .hamburger span { background: var(--text); }
+
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.45) saturate(0.9);
+      transform: scale(1.1);
+      transition: transform 8s ease;
+    }
+    .hero.loaded .hero-bg img {
+      transform: scale(1.0);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+    .hero-title {
+      overflow: hidden;
+    }
+    .hero-title .line {
+      display: block;
+      font-size: clamp(50px, 12vw, 160px);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      line-height: 0.95;
+      color: #f0ece8;
+      transform: translateY(110%);
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero.loaded .hero-title .line {
+      transform: translateY(0);
+    }
+    .hero.loaded .hero-title .line:nth-child(2) {
+      transition-delay: 0.15s;
+    }
+    .hero-sub {
+      font-size: 13px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #888;
+      margin-top: 25px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
+    }
+    .hero.loaded .hero-sub {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 1s ease 1.2s;
+    }
+    .hero.loaded .scroll-hint { opacity: 1; }
+    .scroll-hint span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: #666;
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f0ece8;
+      animation: scrollDown 2s ease-in-out infinite;
+    }
+    @keyframes scrollDown {
+      0% { top: -100%; }
+      50% { top: 100%; }
+      100% { top: 100%; }
+    }
+
+    /* ===== DISCIPLINE MARQUEE ===== */
+    .marquee-section {
+      padding: 50px 0;
+      border-top: 1px solid var(--dim);
+      border-bottom: 1px solid var(--dim);
+      overflow: hidden;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marquee 20s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    .marquee-item {
+      font-size: clamp(30px, 5vw, 60px);
+      font-style: italic;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 0 30px;
+      transition: color 0.3s;
+    }
+    .marquee-item:hover { color: var(--text); }
+    .marquee-sep {
+      font-size: clamp(20px, 3vw, 40px);
+      color: var(--dim);
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ===== HORIZONTAL GALLERY ===== */
+    .gallery-section {
+      padding: 80px 0 60px;
+    }
+    .gallery-label {
+      font-size: 11px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 40px;
+      margin-bottom: 40px;
+    }
+    .h-scroll {
+      display: flex;
+      gap: 25px;
+      padding: 0 40px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .h-scroll::-webkit-scrollbar { display: none; }
+
+    .gallery-card {
+      flex: 0 0 auto;
+      width: clamp(280px, 35vw, 420px);
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      display: block;
+    }
+    .gallery-card .card-img {
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(0.3) brightness(0.95);
+      transition: filter 0.6s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gallery-card:hover img {
+      filter: grayscale(0) brightness(1.02);
+      transform: scale(1.06);
+    }
+
+    /* Clip-path reveal overlay */
+    .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(245, 240, 236, 0.85);
+      display: flex;
+      align-items: flex-end;
+      padding: 25px;
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .gallery-card:hover .card-overlay {
+      clip-path: inset(0 0 0 0);
+    }
+    .card-overlay .card-title {
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 2px;
+    }
+    .card-overlay .card-count {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    /* Card label below */
+    .gallery-card .card-label {
+      padding: 15px 0 5px;
+    }
+    .gallery-card .card-label h3 {
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .gallery-card:hover .card-label h3 { color: var(--text); }
+    .gallery-card .card-label .count {
+      font-size: 12px;
+      color: var(--dim);
+      font-style: italic;
+      margin-top: 3px;
+    }
+
+    /* Section separator */
+    .section-sep {
+      padding: 0 40px;
+      margin: 10px 0;
+    }
+    .section-sep .sep-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .section-sep .sep-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--dim);
+    }
+
+    /* ===== FEATURED IMAGE ===== */
+    .featured {
+      position: relative;
+      height: 70vh;
+      overflow: hidden;
+      margin: 60px 40px;
+    }
+    .featured img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(0.75);
+    }
+    .featured-text {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      z-index: 2;
+    }
+    .featured-text h3 {
+      font-size: clamp(24px, 4vw, 48px);
+      font-style: italic;
+      font-weight: 400;
+      margin-bottom: 8px;
+      color: #f0ece8;
+    }
+    .featured-text p {
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #bbb;
+    }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      border-top: 1px solid var(--dim);
+      padding: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+    .site-footer a {
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .site-footer a:hover { color: var(--text); }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ===== MOCKUP BADGE ===== */
+    .mockup-badge {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #333;
+      color: #fff;
+      padding: 7px 16px;
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      z-index: 9999;
+      border-radius: 2px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      .cursor { display: none; }
+      .top-nav { padding: 15px 20px; }
+      .top-nav ul { display: none; }
+      .top-nav .logo { font-size: 11px; }
+      .hero-title .line { font-size: clamp(36px, 14vw, 80px); }
+      .hero-sub { font-size: 10px; letter-spacing: 4px; }
+      .marquee-item { font-size: 28px; }
+      .gallery-label { padding: 0 20px; margin-bottom: 25px; }
+      .h-scroll { padding: 0 20px; gap: 15px; }
+      .gallery-card { width: 75vw; }
+      .section-sep { padding: 0 20px; }
+      .featured { margin: 40px 20px; height: 50vh; }
+      .featured-text { left: 20px; bottom: 20px; }
+      .site-footer { padding: 30px 20px; flex-direction: column; gap: 10px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-card { width: 85vw; }
+      .hero-sub { letter-spacing: 3px; font-size: 9px; }
+    }
+
+    /* Hamburger for mobile */
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: none;
+      padding: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: #f0ece8;
+      margin: 5px 0;
+    }
+    @media (max-width: 768px) {
+      .hamburger { display: block; cursor: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+<div class="mockup-badge">MOCKUP 3</div>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="logo">Izabela Chamczyk</div>
+  <ul>
+    <li><a href="prace.html" class="nav-link">Prace</a></li>
+    <li><a href="akcje.html" class="nav-link">Akcje</a></li>
+    <li><a href="aktualnosci.html" class="nav-link">Aktualności</a></li>
+    <li><a href="bio.html" class="nav-link">Bio</a></li>
+    <li><a href="kontakt.html" class="nav-link">Kontakt</a></li>
+    <li><a href="en/index.html" class="nav-link">EN</a></li>
+  </ul>
+  <button class="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="images/slider-5-fascynacja.jpg" alt="Fascynacja">
+  </div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <span class="line">Izabela</span>
+      <span class="line">Chamczyk</span>
+    </h1>
+    <p class="hero-sub">Malarstwo &nbsp;·&nbsp; Performance &nbsp;·&nbsp; Video &nbsp;·&nbsp; Instalacje &nbsp;·&nbsp; Fotografia &nbsp;·&nbsp; Warsztaty</p>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- DISCIPLINE MARQUEE -->
+<div class="marquee-section reveal">
+  <div class="marquee-track">
+    <a href="malarstwo.html" class="marquee-item">Malarstwo</a>
+    <span class="marquee-sep">✦</span>
+    <a href="performance.html" class="marquee-item">Performance</a>
+    <span class="marquee-sep">✦</span>
+    <a href="video.html" class="marquee-item">Video</a>
+    <span class="marquee-sep">✦</span>
+    <a href="instalacje.html" class="marquee-item">Instalacje</a>
+    <span class="marquee-sep">✦</span>
+    <a href="fotografia.html" class="marquee-item">Fotografia</a>
+    <span class="marquee-sep">✦</span>
+    <a href="warsztaty.html" class="marquee-item">Warsztaty</a>
+    <span class="marquee-sep">✦</span>
+    <!-- Duplicate for seamless loop -->
+    <a href="malarstwo.html" class="marquee-item">Malarstwo</a>
+    <span class="marquee-sep">✦</span>
+    <a href="performance.html" class="marquee-item">Performance</a>
+    <span class="marquee-sep">✦</span>
+    <a href="video.html" class="marquee-item">Video</a>
+    <span class="marquee-sep">✦</span>
+    <a href="instalacje.html" class="marquee-item">Instalacje</a>
+    <span class="marquee-sep">✦</span>
+    <a href="fotografia.html" class="marquee-item">Fotografia</a>
+    <span class="marquee-sep">✦</span>
+    <a href="warsztaty.html" class="marquee-item">Warsztaty</a>
+    <span class="marquee-sep">✦</span>
+  </div>
+</div>
+
+<!-- PRACE — Horizontal Gallery -->
+<section class="gallery-section">
+  <div class="section-sep reveal">
+    <div class="sep-label">Prace</div>
+  </div>
+
+  <div class="h-scroll">
+    <a class="gallery-card reveal reveal-delay-1" href="malarstwo.html">
+      <div class="card-img">
+        <img src="images/cat-malarstwo.png" alt="Malarstwo">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Malarstwo</div>
+            <div class="card-count">86 prac</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Malarstwo</h3>
+        <div class="count">86 prac</div>
+      </div>
+    </a>
+    <a class="gallery-card reveal reveal-delay-2" href="video.html">
+      <div class="card-img">
+        <img src="images/cat-video.png" alt="Video">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Video</div>
+            <div class="card-count">12 prac</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Video</h3>
+        <div class="count">12 prac</div>
+      </div>
+    </a>
+    <a class="gallery-card reveal reveal-delay-3" href="instalacje.html">
+      <div class="card-img">
+        <img src="images/cat-instalacje.png" alt="Instalacje">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Instalacje</div>
+            <div class="card-count">6 prac</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Instalacje</h3>
+        <div class="count">6 prac</div>
+      </div>
+    </a>
+    <a class="gallery-card reveal" href="fotografia.html">
+      <div class="card-img">
+        <img src="images/cat-fotografia.png" alt="Fotografia">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Fotografia</div>
+            <div class="card-count">4 prace</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Fotografia</h3>
+        <div class="count">4 prace</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- AKCJE — Horizontal Gallery -->
+<section class="gallery-section">
+  <div class="section-sep reveal">
+    <div class="sep-label">Akcje</div>
+  </div>
+
+  <div class="h-scroll">
+    <a class="gallery-card reveal reveal-delay-1" href="performance.html">
+      <div class="card-img">
+        <img src="images/cat-performance.png" alt="Performance">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Performance</div>
+            <div class="card-count">40 prac</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Performance</h3>
+        <div class="count">40 prac</div>
+      </div>
+    </a>
+    <a class="gallery-card reveal reveal-delay-2" href="wojna.html">
+      <div class="card-img">
+        <img src="images/cat-wojna.png" alt="Wojna Dwunastomiesięczna">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Wojna Dwunastomiesięczna</div>
+            <div class="card-count">11 prac</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Wojna 12M</h3>
+        <div class="count">11 prac</div>
+      </div>
+    </a>
+    <a class="gallery-card reveal reveal-delay-3" href="warsztaty.html">
+      <div class="card-img">
+        <img src="images/cat-warsztaty.png" alt="Warsztaty">
+        <div class="card-overlay">
+          <div>
+            <div class="card-title">Warsztaty</div>
+            <div class="card-count">3 prace</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-label">
+        <h3>Warsztaty</h3>
+        <div class="count">3 prace</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- FEATURED IMAGE -->
+<div class="featured reveal">
+  <img src="images/slider-1-malarstwo.jpg" alt="Featured">
+  <div class="featured-text">
+    <h3>Sztuka, która rani i leczy</h3>
+    <p>Zobacz prace &rarr;</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <span>&copy; 2026 Izabela Chamczyk</span>
+  <span>
+    <a href="bio.html">Bio</a> &nbsp;&middot;&nbsp;
+    <a href="kontakt.html">Kontakt</a> &nbsp;&middot;&nbsp;
+    <a href="en/index.html">English</a>
+  </span>
+</footer>
+
+<!-- SCRIPTS -->
+<script>
+(function() {
+
+  /* --- Custom Cursor --- */
+  var cursor = document.getElementById('cursor');
+  var cx = 0, cy = 0, mx = 0, my = 0;
+
+  document.addEventListener('mousemove', function(e) {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+
+  function updateCursor() {
+    cx += (mx - cx) * 0.12;
+    cy += (my - cy) * 0.12;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    requestAnimationFrame(updateCursor);
+  }
+  updateCursor();
+
+  // Cursor states
+  document.querySelectorAll('.gallery-card, .featured').forEach(function(el) {
+    el.addEventListener('mouseenter', function() { cursor.classList.add('hover'); });
+    el.addEventListener('mouseleave', function() { cursor.classList.remove('hover'); });
+  });
+  document.querySelectorAll('.nav-link, .site-footer a').forEach(function(el) {
+    el.addEventListener('mouseenter', function() { cursor.classList.add('nav-hover'); });
+    el.addEventListener('mouseleave', function() { cursor.classList.remove('nav-hover'); });
+  });
+
+  /* --- Hero Load Animation --- */
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      document.getElementById('hero').classList.add('loaded');
+    }, 200);
+  });
+
+  /* --- Scroll Reveal --- */
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  reveals.forEach(function(el) { observer.observe(el); });
+
+  /* --- Parallax on Hero Background + Nav color change --- */
+  var heroBg = document.querySelector('.hero-bg img');
+  var topNav = document.querySelector('.top-nav');
+  window.addEventListener('scroll', function() {
+    var scrolled = window.scrollY;
+    if (scrolled < window.innerHeight) {
+      heroBg.style.transform = 'scale(' + (1 + scrolled * 0.0003) + ') translateY(' + (scrolled * 0.3) + 'px)';
+    }
+    // Switch nav to dark text when past hero
+    if (scrolled > window.innerHeight * 0.7) {
+      topNav.classList.add('scrolled');
+    } else {
+      topNav.classList.remove('scrolled');
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>

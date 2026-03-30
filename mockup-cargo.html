@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izabela Chamczyk</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+      background: #fff;
+      color: rgba(0,0,0,0.85);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    /* ===== LAYOUT ===== */
+    .site {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 30px 0 50px;
+    }
+    .header-name {
+      font-family: 'Georgia', serif;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      color: #222;
+    }
+    .header-nav {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+    .header-nav a {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+      transition: color 0.3s;
+    }
+    .header-nav a:hover { color: #222; }
+
+    /* ===== HERO IMAGE ===== */
+    .hero-img {
+      width: 100%;
+      margin-bottom: 15px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .hero-img img {
+      width: 100%;
+      filter: grayscale(100%);
+      transition: filter 0.8s ease;
+    }
+    .hero-img:hover img {
+      filter: grayscale(0%);
+    }
+    .hero-caption {
+      font-size: 11px;
+      color: #bbb;
+      margin-bottom: 60px;
+      font-style: italic;
+    }
+
+    /* ===== DISCIPLINES ===== */
+    .disciplines {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #bbb;
+      text-transform: uppercase;
+      margin-bottom: 60px;
+      text-align: center;
+    }
+    .disciplines a {
+      color: #bbb;
+      transition: color 0.3s;
+    }
+    .disciplines a:hover { color: #222; }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #ccc;
+      margin-bottom: 25px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* ===== MASONRY GRID ===== */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 70px;
+    }
+
+    .grid-item {
+      display: block;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .grid-item .thumb {
+      overflow: hidden;
+      position: relative;
+      background: #f5f5f5;
+    }
+
+    .grid-item img {
+      width: 100%;
+      display: block;
+      filter: grayscale(100%);
+      transition: filter 0.7s ease, transform 0.7s ease;
+    }
+    .grid-item:hover img {
+      filter: grayscale(0%);
+      transform: scale(1.015);
+    }
+
+    /* Title reveal on hover */
+    .grid-item .item-info {
+      padding: 8px 0 2px;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .grid-item:hover .item-info {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .item-info .item-title {
+      font-size: 12px;
+      color: #444;
+      font-weight: 400;
+    }
+    .item-info .item-count {
+      font-size: 10px;
+      color: #bbb;
+    }
+
+    /* Vary heights for masonry feel */
+    .grid-item .thumb { aspect-ratio: 4 / 3; }
+    .grid-item .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      padding: 30px 0;
+      border-top: 1px solid #f0f0f0;
+      font-size: 10px;
+      color: #ccc;
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.5px;
+    }
+    .footer a {
+      color: #bbb;
+      transition: color 0.3s;
+    }
+    .footer a:hover { color: #222; }
+
+    /* ===== MOCKUP BADGE ===== */
+    .mockup-badge {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: #222;
+      color: #fff;
+      padding: 6px 14px;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 9999;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .site { padding: 0 20px; }
+      .header { padding: 20px 0 30px; }
+      .header-name { font-size: 13px; }
+      .header-nav { gap: 12px; }
+      .header-nav a { font-size: 10px; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .disciplines { margin-bottom: 40px; }
+      /* On mobile: show color by default (no hover) */
+      .grid-item img { filter: grayscale(40%); }
+      .grid-item .item-info { opacity: 1; transform: translateY(0); }
+      .hero-img img { filter: grayscale(60%); }
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .header-nav { gap: 8px; }
+      .header-nav a { font-size: 9px; letter-spacing: 1px; }
+      .hero-caption { margin-bottom: 35px; }
+      .disciplines { font-size: 9px; margin-bottom: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mockup-badge">MOCKUP 4</div>
+
+<div class="site">
+
+  <!-- HEADER -->
+  <header class="header">
+    <a href="index.html" class="header-name">Izabela Chamczyk</a>
+    <nav>
+      <ul class="header-nav">
+        <li><a href="prace.html">Prace</a></li>
+        <li><a href="akcje.html">Akcje</a></li>
+        <li><a href="bio.html">Bio</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+        <li><a href="en/index.html">EN</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO — one large featured painting -->
+  <a href="malarstwo.html" class="hero-img">
+    <img src="images/slider-1-malarstwo.jpg" alt="Izabela Chamczyk — Malarstwo">
+  </a>
+  <div class="hero-caption">Malarstwo, olej na płótnie</div>
+
+  <!-- DISCIPLINES -->
+  <div class="disciplines">
+    <a href="malarstwo.html">Malarstwo</a> &nbsp;·&nbsp;
+    <a href="performance.html">Performance</a> &nbsp;·&nbsp;
+    <a href="video.html">Video</a> &nbsp;·&nbsp;
+    <a href="instalacje.html">Instalacje</a> &nbsp;·&nbsp;
+    <a href="fotografia.html">Fotografia</a> &nbsp;·&nbsp;
+    <a href="warsztaty.html">Warsztaty</a>
+  </div>
+
+  <!-- PRACE -->
+  <div class="section-label">Prace</div>
+
+  <div class="grid">
+    <a class="grid-item" href="malarstwo.html">
+      <div class="thumb">
+        <img src="images/cat-malarstwo.png" alt="Malarstwo">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Malarstwo</div>
+        <div class="item-count">86 prac</div>
+      </div>
+    </a>
+
+    <a class="grid-item" href="video.html">
+      <div class="thumb">
+        <img src="images/cat-video.png" alt="Video">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Video</div>
+        <div class="item-count">12 prac</div>
+      </div>
+    </a>
+
+    <a class="grid-item" href="instalacje.html">
+      <div class="thumb">
+        <img src="images/cat-instalacje.png" alt="Instalacje">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Instalacje</div>
+        <div class="item-count">6 prac</div>
+      </div>
+    </a>
+
+    <a class="grid-item" href="fotografia.html">
+      <div class="thumb">
+        <img src="images/cat-fotografia.png" alt="Fotografia">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Fotografia</div>
+        <div class="item-count">4 prace</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- AKCJE -->
+  <div class="section-label">Akcje</div>
+
+  <div class="grid">
+    <a class="grid-item" href="performance.html">
+      <div class="thumb">
+        <img src="images/cat-performance.png" alt="Performance">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Performance</div>
+        <div class="item-count">40 prac</div>
+      </div>
+    </a>
+
+    <a class="grid-item" href="wojna.html">
+      <div class="thumb">
+        <img src="images/cat-wojna.png" alt="Wojna Dwunastomiesięczna">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Wojna Dwunastomiesięczna</div>
+        <div class="item-count">11 prac</div>
+      </div>
+    </a>
+
+    <a class="grid-item" href="warsztaty.html">
+      <div class="thumb">
+        <img src="images/cat-warsztaty.png" alt="Warsztaty">
+      </div>
+      <div class="item-info">
+        <div class="item-title">Warsztaty</div>
+        <div class="item-count">3 prace</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span>&copy; 2026 Izabela Chamczyk</span>
+    <span>
+      <a href="bio.html">Bio</a> &nbsp;·&nbsp;
+      <a href="kontakt.html">Kontakt</a> &nbsp;·&nbsp;
+      <a href="en/index.html">English</a>
+    </span>
+  </footer>
+
+</div>
+
+</body>
+</html>
