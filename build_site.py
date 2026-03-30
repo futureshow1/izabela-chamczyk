@@ -240,6 +240,7 @@ def main():
                 detail_path = f"{parent}/{cat_key}/{slug}.html"
                 cards.append(f"""      <a href="{detail_path}" class="category-card">
         <img src="{thumb}" alt="{esc(wtitle)}">
+        <span class="label">{esc(wtitle)}</span>
       </a>""")
 
             body = f"""      <h1 class="page-title">{esc(title)}</h1>

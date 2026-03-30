@@ -235,12 +235,14 @@ img {
   color: #ddd;
   font-size: 15px;
   font-style: italic;
-  display: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-/* Show label only when using placeholder backgrounds (no img) */
-.category-card:not(:has(img)) .label {
-  display: block;
+.category-card:hover .label {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Placeholder for cards without images */
