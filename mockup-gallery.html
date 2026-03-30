@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCKUP 2 — Izabela Chamczyk — Gallery Minimal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Cardo', Georgia, serif;
+      color: #666;
+      background: #f5e6e0;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    .wrapper {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      min-height: 100vh;
+      padding: 0 30px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.05);
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 28px 0 18px;
+    }
+    .site-title a {
+      font-size: 35px;
+      font-weight: 700;
+      color: #666;
+      letter-spacing: 0.5px;
+    }
+    .main-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 8px;
+    }
+    .main-nav a {
+      font-size: 15px;
+      color: #303030;
+      padding: 4px 6px;
+      transition: color 0.3s;
+    }
+    .main-nav a:hover { color: #999; }
+
+    /* ===== HERO SLIDER ===== */
+    .slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      aspect-ratio: 2.2 / 1;
+      background: #eee;
+    }
+    .slider-track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .slide {
+      width: 100%;
+      min-width: 100%;
+      height: 100%;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Slider dots */
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 0 0;
+    }
+    .slider-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ccc;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .slider-dot.active {
+      background: #888;
+      transform: scale(1.3);
+    }
+    .slider-dot:hover { background: #999; }
+
+    /* ===== DISCIPLINE STRIP ===== */
+    .disciplines {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 30px 0 10px;
+      border-bottom: 1px solid #e8e0dc;
+      margin-bottom: 40px;
+    }
+    .disc-link {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #aaa;
+      padding: 6px 10px;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .disc-link:hover {
+      color: #333;
+    }
+    .disc-sep {
+      color: #ddd;
+      font-size: 11px;
+      line-height: 2.2;
+      user-select: none;
+    }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #bbb;
+      margin-bottom: 30px;
+    }
+
+    /* ===== CATEGORY GRID ===== */
+    .cat-grid {
+      display: grid;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+    .cat-grid.row-top {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .cat-grid.row-bottom {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 75%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 50px;
+    }
+
+    .cat-item {
+      display: block;
+      text-align: center;
+      cursor: pointer;
+    }
+    .cat-thumb {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+      background: #f0ebe8;
+      margin-bottom: 12px;
+    }
+    .cat-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+      filter: saturate(0.9);
+    }
+    .cat-item:hover .cat-thumb img {
+      transform: scale(1.04);
+      filter: saturate(1.1) brightness(1.03);
+    }
+
+    /* Subtle line accent on hover */
+    .cat-thumb::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 2px;
+      background: #999;
+      transition: width 0.4s ease;
+    }
+    .cat-item:hover .cat-thumb::after {
+      width: 40px;
+    }
+
+    .cat-name {
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      transition: color 0.3s;
+      font-weight: 400;
+    }
+    .cat-count {
+      font-size: 11px;
+      color: #bbb;
+      font-style: italic;
+      margin-top: 2px;
+      transition: color 0.3s;
+    }
+    .cat-item:hover .cat-name { color: #333; }
+    .cat-item:hover .cat-count { color: #888; }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      border-top: 1px solid #e8e0dc;
+      padding: 25px 0;
+      font-size: 14px;
+      color: #999;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    .site-footer a {
+      color: #888;
+      transition: color 0.3s;
+    }
+    .site-footer a:hover { color: #333; }
+
+    /* ===== MOCKUP BADGE ===== */
+    .mockup-badge {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #555;
+      color: #fff;
+      padding: 7px 16px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      z-index: 9999;
+      border-radius: 2px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .wrapper { padding: 0 20px; }
+      .site-title a { font-size: 26px; }
+      .main-nav { display: none; }
+      .slider { aspect-ratio: 3 / 2; }
+      .disciplines {
+        flex-wrap: wrap;
+        gap: 2px;
+        padding: 20px 0 10px;
+        margin-bottom: 25px;
+      }
+      .disc-link { font-size: 10px; padding: 4px 6px; letter-spacing: 1.5px; }
+      .disc-sep { display: none; }
+      .cat-grid.row-top {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+      .cat-grid.row-bottom {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 100%;
+        gap: 20px;
+      }
+      .cat-name { font-size: 11px; letter-spacing: 1.5px; }
+      .section-label { margin-bottom: 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .site-title a { font-size: 22px; }
+      .slider { aspect-ratio: 4 / 3; }
+      .disciplines { gap: 0; padding: 15px 0 8px; margin-bottom: 20px; }
+      .disc-link { font-size: 9px; padding: 3px 5px; letter-spacing: 1px; }
+      .cat-grid.row-top {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+      .cat-grid.row-bottom {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 100%;
+        gap: 15px;
+      }
+      .cat-thumb { aspect-ratio: 1 / 1; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mockup-badge">MOCKUP 2</div>
+
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <nav class="main-nav">
+      <ul>
+        <li><a href="prace.html">Prace</a></li>
+        <li><a href="akcje.html">Akcje</a></li>
+        <li><a href="aktualnosci.html">Aktualności</a></li>
+        <li><a href="bio.html">Bio</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+        <li><a href="en/index.html">English</a></li>
+      </ul>
+    </nav>
+    <div class="site-title">
+      <a href="index.html">Izabela Chamczyk</a>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO SLIDER -->
+    <div class="slider" id="slider">
+      <div class="slider-track" id="slider-track">
+        <div class="slide"><img src="images/slider-1-malarstwo.jpg" alt="Malarstwo"></div>
+        <div class="slide"><img src="images/slider-2-szczelina.jpg" alt="Szczelina"></div>
+        <div class="slide"><img src="images/slider-3-kwas.jpg" alt="Kwas"></div>
+        <div class="slide"><img src="images/slider-4-coswczyms.jpg" alt="Coś w czymś"></div>
+        <div class="slide"><img src="images/slider-5-fascynacja.jpg" alt="Fascynacja"></div>
+        <div class="slide"><img src="images/slider-6-torn.jpg" alt="TORN"></div>
+        <div class="slide"><img src="images/slider-7-nazwij.jpg" alt="Nazwij to jak chcesz"></div>
+      </div>
+    </div>
+    <div class="slider-dots" id="slider-dots">
+      <button class="slider-dot active"></button>
+      <button class="slider-dot"></button>
+      <button class="slider-dot"></button>
+      <button class="slider-dot"></button>
+      <button class="slider-dot"></button>
+      <button class="slider-dot"></button>
+      <button class="slider-dot"></button>
+    </div>
+
+    <!-- DISCIPLINE STRIP -->
+    <div class="disciplines">
+      <a href="malarstwo.html" class="disc-link">Malarstwo</a>
+      <span class="disc-sep">/</span>
+      <a href="performance.html" class="disc-link">Performance</a>
+      <span class="disc-sep">/</span>
+      <a href="video.html" class="disc-link">Video</a>
+      <span class="disc-sep">/</span>
+      <a href="instalacje.html" class="disc-link">Instalacje</a>
+      <span class="disc-sep">/</span>
+      <a href="fotografia.html" class="disc-link">Fotografia</a>
+      <span class="disc-sep">/</span>
+      <a href="warsztaty.html" class="disc-link">Warsztaty</a>
+    </div>
+
+    <!-- CATEGORY GRID — ROW 1: 4 columns (Prace) -->
+    <div class="section-label">Prace</div>
+
+    <div class="cat-grid row-top">
+      <a class="cat-item" href="malarstwo.html">
+        <div class="cat-thumb">
+          <img src="images/cat-malarstwo.png" alt="Malarstwo">
+        </div>
+        <div class="cat-name">Malarstwo</div>
+        <div class="cat-count">86 prac</div>
+      </a>
+      <a class="cat-item" href="video.html">
+        <div class="cat-thumb">
+          <img src="images/cat-video.png" alt="Video">
+        </div>
+        <div class="cat-name">Video</div>
+        <div class="cat-count">12 prac</div>
+      </a>
+      <a class="cat-item" href="instalacje.html">
+        <div class="cat-thumb">
+          <img src="images/cat-instalacje.png" alt="Instalacje">
+        </div>
+        <div class="cat-name">Instalacje</div>
+        <div class="cat-count">6 prac</div>
+      </a>
+      <a class="cat-item" href="fotografia.html">
+        <div class="cat-thumb">
+          <img src="images/cat-fotografia.png" alt="Fotografia">
+        </div>
+        <div class="cat-name">Fotografia</div>
+        <div class="cat-count">4 prace</div>
+      </a>
+    </div>
+
+    <!-- CATEGORY GRID — ROW 2: 3 columns (Akcje) -->
+    <div class="section-label">Akcje</div>
+
+    <div class="cat-grid row-bottom">
+      <a class="cat-item" href="performance.html">
+        <div class="cat-thumb">
+          <img src="images/cat-performance.png" alt="Performance">
+        </div>
+        <div class="cat-name">Performance</div>
+        <div class="cat-count">40 prac</div>
+      </a>
+      <a class="cat-item" href="wojna.html">
+        <div class="cat-thumb">
+          <img src="images/cat-wojna.png" alt="Wojna Dwunastomiesięczna">
+        </div>
+        <div class="cat-name">Wojna 12M</div>
+        <div class="cat-count">11 prac</div>
+      </a>
+      <a class="cat-item" href="warsztaty.html">
+        <div class="cat-thumb">
+          <img src="images/cat-warsztaty.png" alt="Warsztaty">
+        </div>
+        <div class="cat-name">Warsztaty</div>
+        <div class="cat-count">3 prace</div>
+      </a>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2026 / <a href="index.html">Izabela Chamczyk</a> / <a href="#">Credits</a>
+  </footer>
+
+</div>
+
+<!-- SLIDER JS -->
+<script>
+(function() {
+  var track = document.getElementById('slider-track');
+  var dots = document.querySelectorAll('.slider-dot');
+  var current = 0;
+  var total = dots.length;
+  var interval;
+
+  function goTo(i) {
+    current = ((i % total) + total) % total;
+    track.style.transform = 'translateX(-' + (current * 100) + '%)';
+    dots.forEach(function(d, idx) {
+      d.classList.toggle('active', idx === current);
+    });
+  }
+
+  dots.forEach(function(dot, idx) {
+    dot.addEventListener('click', function() {
+      goTo(idx);
+      resetAuto();
+    });
+  });
+
+  function autoPlay() {
+    interval = setInterval(function() { goTo(current + 1); }, 4500);
+  }
+  function resetAuto() {
+    clearInterval(interval);
+    autoPlay();
+  }
+
+  autoPlay();
+})();
+</script>
+
+</body>
+</html>
