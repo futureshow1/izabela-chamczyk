@@ -85,6 +85,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// ===== CONTACT FORM (Formspree AJAX) =====
+(function() {
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var origText = btn.textContent;
+    btn.textContent = '...';
+    btn.disabled = true;
+
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res) {
+      if (res.ok) {
+        form.style.display = 'none';
+        var success = document.getElementById('form-success');
+        if (success) success.style.display = 'block';
+      } else {
+        btn.textContent = origText;
+        btn.disabled = false;
+        alert('Wystąpił błąd. Spróbuj ponownie. / An error occurred. Please try again.');
+      }
+    }).catch(function() {
+      btn.textContent = origText;
+      btn.disabled = false;
+      alert('Wystąpił błąd połączenia. / Connection error.');
+    });
+  });
+})();
+
 // ===== MOBILE PREVIEW =====
 function toggleMobilePreview() {
   let overlay = document.querySelector('.mobile-preview-overlay');

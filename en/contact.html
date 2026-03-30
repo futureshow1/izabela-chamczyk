@@ -16,6 +16,7 @@
       <nav class="main-nav">
         <ul>
           <li><a href="works.html">Works</a></li>
+          <li><a href="exhibitions.html">Exhibitions</a></li>
           <li><a href="actions.html">Actions</a></li>
           <li><a href="news.html">News</a></li>
           <li><a href="bio.html">Bio</a></li>
@@ -31,7 +32,8 @@
       <h1 class="page-title">Contact</h1>
       <div class="contact-form">
         <h2>Contact</h2>
-        <form action="#" method="post">
+        <form id="contact-form" action="https://formspree.io/f/izabela.chamczyk@gmail.com" method="POST">
+          <input type="text" name="_gotcha" style="display:none">
           <div class="form-group">
             <label for="message">Message <span class="required">*</span></label>
             <textarea id="message" name="message" required></textarea>
@@ -44,8 +46,11 @@
             <label for="phone">Phone number</label>
             <input type="tel" id="phone" name="phone">
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit">Send</button>
         </form>
+        <div id="form-success" style="display:none">
+          <p style="font-size:18px; color:#333; font-style:italic; padding:30px 0;">Thank you! Your message has been sent.</p>
+        </div>
       </div>
     </main>
     <div class="mobile-preview-toggle"><button onclick="toggleMobilePreview()" title="Mobile preview">&#128241;</button></div>
