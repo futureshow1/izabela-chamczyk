@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Cardo:ital,wght@0,400;0,700;1,400&display=swap');
 
+/* ===== ACCENT COLOR ===== */
+:root {
+  --accent: #DD1111;
+  --accent-dark: #BB0E0E;
+}
+
 /* ===== RESET & BASE ===== */
 *, *::before, *::after {
   margin: 0;
@@ -124,7 +130,7 @@ img {
   text-align: center;
   font-size: 28px;
   font-weight: 400;
-  color: #666;
+  color: #333;
   margin-bottom: 25px;
   font-style: italic;
 }
@@ -190,7 +196,7 @@ img {
 }
 
 .slider-dot.active {
-  background: #4a8abf;
+  background: var(--accent);
 }
 
 /* ===== CATEGORY GRID ===== */
@@ -243,6 +249,8 @@ img {
 .category-card:hover .label {
   opacity: 1;
   transform: translateY(0);
+  background: var(--accent);
+  color: #fff;
 }
 
 /* Placeholder for cards without images */
@@ -278,7 +286,164 @@ img {
 .bg-wojna { background: linear-gradient(135deg, #5a8a6a, #7ab, #9cd); }
 .bg-warsztaty { background: linear-gradient(135deg, #4a8a9a, #6ab, #8cd); }
 
+/* ===== VERTICAL CATEGORIES (HOMEPAGE) ===== */
+.v-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 40px;
+}
+
+.v-category {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  height: 220px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.v-category:last-child {
+  border-bottom: none;
+}
+
+.v-label {
+  width: 48px;
+  min-width: 48px;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.v-label span {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #999;
+  white-space: nowrap;
+  transition: color 0.4s ease, letter-spacing 0.4s ease;
+}
+
+.v-category:hover .v-label {
+  background: var(--accent);
+  width: 52px;
+}
+.v-category:hover .v-label span {
+  color: #fff;
+  letter-spacing: 5px;
+}
+
+.v-number {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 48px;
+  text-align: center;
+  font-size: 10px;
+  color: #555;
+  font-weight: 700;
+  z-index: 3;
+}
+
+.v-image {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.v-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease, filter 0.6s ease;
+  filter: brightness(0.85);
+}
+
+.v-category:hover .v-image img {
+  transform: scale(1.05);
+  filter: brightness(1);
+}
+
+.v-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30px 25px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  z-index: 2;
+}
+
+.v-info h3 {
+  font-size: 22px;
+  color: #fff;
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 4px;
+  transform: translateY(5px);
+  opacity: 0.9;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+.v-info .v-count {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transform: translateY(10px);
+  opacity: 0;
+  transition: transform 0.4s ease 0.05s, opacity 0.4s ease 0.05s;
+}
+
+.v-category:hover .v-info h3 {
+  transform: translateY(0);
+  opacity: 1;
+}
+.v-category:hover .v-info .v-count {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.v-accent {
+  width: 3px;
+  min-width: 3px;
+  background: transparent;
+  transition: background 0.4s ease;
+}
+.v-category:hover .v-accent {
+  background: var(--accent);
+}
+
 /* ===== BIO PAGE ===== */
+.bio-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.bio-nav a {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+  transition: color 0.3s;
+}
+
+.bio-nav a:hover {
+  color: var(--accent);
+}
+
 .bio-content {
   max-width: 100%;
   line-height: 1.7;
@@ -296,19 +461,67 @@ img {
   text-transform: uppercase;
   letter-spacing: 1px;
   color: #333;
-  margin: 30px 0 15px;
+  margin: 35px 0 15px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
 }
 
 .bio-content .year {
   font-weight: 700;
-  color: #444;
+  color: var(--accent);
+  font-size: 16px;
   margin-top: 20px;
   margin-bottom: 5px;
 }
 
 .bio-content .entry {
   margin-bottom: 4px;
-  padding-left: 10px;
+  padding-left: 15px;
+  position: relative;
+}
+
+.bio-content .entry::before {
+  content: "\2014";
+  position: absolute;
+  left: 0;
+  color: #999;
+}
+
+/* ===== EXHIBITIONS PAGE ===== */
+.exhibitions-list h3 {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333;
+  margin: 40px 0 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+
+.year-group {
+  margin-bottom: 25px;
+}
+
+.year-group .year {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.year-group .entry {
+  padding-left: 15px;
+  margin-bottom: 6px;
+  line-height: 1.6;
+  position: relative;
+}
+
+.year-group .entry::before {
+  content: "\2014";
+  position: absolute;
+  left: 0;
+  color: #999;
 }
 
 /* ===== NEWS / AKTUALNOSCI ===== */
@@ -428,9 +641,9 @@ img {
 }
 
 .contact-form button:hover {
-  background: #333;
+  background: var(--accent);
   color: #fff;
-  border-color: #333;
+  border-color: var(--accent);
 }
 
 /* ===== FOOTER ===== */
@@ -471,7 +684,7 @@ img {
 }
 
 .back-link:hover {
-  color: #333;
+  color: var(--accent);
 }
 
 .work-title {
@@ -579,6 +792,17 @@ main {
   .news-title {
     font-size: 18px;
   }
+
+  /* Vertical categories responsive */
+  .v-category { height: 160px; }
+  .v-label { width: 36px; min-width: 36px; }
+  .v-label span { font-size: 10px; letter-spacing: 3px; }
+  .v-number { width: 36px; font-size: 9px; }
+  .v-info h3 { font-size: 18px; }
+  .v-info { padding: 20px 15px 15px; }
+
+  .bio-nav { gap: 8px; }
+  .bio-nav a { font-size: 10px; letter-spacing: 0.5px; }
 }
 
 @media (max-width: 480px) {
@@ -602,6 +826,11 @@ main {
   .bio-content p {
     text-align: left;
   }
+
+  .v-category { height: 130px; }
+  .v-label { width: 30px; min-width: 30px; }
+  .v-label span { font-size: 9px; letter-spacing: 2px; }
+  .v-info h3 { font-size: 16px; }
 
   .contact-form {
     max-width: 100%;

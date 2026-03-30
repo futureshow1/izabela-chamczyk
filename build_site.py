@@ -53,6 +53,7 @@ def make_page(lang, title, css_path, js_path, nav_prefix, home, body_html):
         nav = f"""      <nav class="main-nav">
         <ul>
           <li><a href="{nav_prefix}prace.html">Prace</a></li>
+          <li><a href="{nav_prefix}wystawy.html">Wystawy</a></li>
           <li><a href="{nav_prefix}akcje.html">Akcje</a></li>
           <li><a href="{nav_prefix}aktualnosci.html">Aktualności</a></li>
           <li><a href="{nav_prefix}bio.html">Bio</a></li>
@@ -64,6 +65,7 @@ def make_page(lang, title, css_path, js_path, nav_prefix, home, body_html):
         nav = f"""      <nav class="main-nav">
         <ul>
           <li><a href="{nav_prefix}works.html">Works</a></li>
+          <li><a href="{nav_prefix}exhibitions.html">Exhibitions</a></li>
           <li><a href="{nav_prefix}actions.html">Actions</a></li>
           <li><a href="{nav_prefix}news.html">News</a></li>
           <li><a href="{nav_prefix}bio.html">Bio</a></li>
@@ -402,19 +404,410 @@ def main():
     html = make_page("en", "Actions", "../css/style.css", "../js/main.js", "", "index.html", actions_body)
     (BASE / "en" / "actions.html").write_text(html, encoding="utf-8")
 
-    # Update index.html homepage links
-    print("\n=== Updating homepage links ===")
-    index_cards = [
-        ("prace.html", "images/cat-malarstwo.png", "Malarstwo", "works.html"),
-        ("akcje.html", "images/cat-performance.png", "Performance", "actions.html"),
-        ("prace.html", "images/cat-video.png", "Video", "works.html"),
+    # ============================================
+    # GENERATE HOMEPAGE WITH VERTICAL STRINGS
+    # ============================================
+    print("\n=== Generating vertical-strings homepage ===")
+
+    HOMEPAGE_CATS = [
+        {"key": "wystawy", "label": "Wystawy", "label_en": "Exhibitions",
+         "img": "images/cat-wystawy.png", "href": "wystawy.html", "href_en": "exhibitions.html",
+         "full": "Wystawy", "full_en": "Exhibitions"},
+        {"key": "malarstwo", "label": "Malarstwo", "label_en": "Painting",
+         "img": "images/cat-malarstwo.png", "href": "malarstwo.html", "href_en": "malarstwo.html",
+         "full": "Malarstwo", "full_en": "Painting"},
+        {"key": "performance", "label": "Performance", "label_en": "Performance",
+         "img": "images/cat-performance.png", "href": "performance.html", "href_en": "performance.html",
+         "full": "Performance", "full_en": "Performance"},
+        {"key": "video", "label": "Video", "label_en": "Video",
+         "img": "images/cat-video.png", "href": "video.html", "href_en": "video.html",
+         "full": "Video", "full_en": "Video"},
+        {"key": "instalacje", "label": "Instalacje", "label_en": "Installations",
+         "img": "images/cat-instalacje.png", "href": "instalacje.html", "href_en": "instalacje.html",
+         "full": "Instalacje", "full_en": "Installations"},
+        {"key": "fotografia", "label": "Fotografia", "label_en": "Photography",
+         "img": "images/cat-fotografia.png", "href": "fotografia.html", "href_en": "fotografia.html",
+         "full": "Fotografia", "full_en": "Photography"},
+        {"key": "wojna", "label": "Wojna 12M", "label_en": "12-Month War",
+         "img": "images/cat-wojna.png", "href": "wojna.html", "href_en": "wojna.html",
+         "full": "Wojna Dwunastomiesięczna", "full_en": "Twelve-Month War"},
+        {"key": "warsztaty", "label": "Warsztaty", "label_en": "Workshops",
+         "img": "images/cat-warsztaty.png", "href": "warsztaty.html", "href_en": "warsztaty.html",
+         "full": "Warsztaty", "full_en": "Workshops"},
     ]
-    # PL index - just update the category grid links
-    index_html = (BASE / "index.html").read_text(encoding="utf-8")
-    # Replace href="#" with actual links in category cards
-    index_html = index_html.replace('href="works.html" class="category-card"', 'href="prace.html" class="category-card"')
-    index_html = index_html.replace('href="actions.html" class="category-card"', 'href="akcje.html" class="category-card"')
-    (BASE / "index.html").write_text(index_html, encoding="utf-8")
+
+    SLIDER_IMAGES = [
+        ("images/slider-1-malarstwo.jpg", "Malarstwo"),
+        ("images/slider-2-szczelina.jpg", "Szczelina"),
+        ("images/slider-3-kwas.jpg", "Kwas"),
+        ("images/slider-4-coswczyms.jpg", "Coś w czymś"),
+        ("images/slider-5-fascynacja.jpg", "Fascynacja"),
+        ("images/slider-6-torn.jpg", "TORN"),
+        ("images/slider-7-nazwij.jpg", "Nazwij to jak chcesz"),
+    ]
+
+    for lang in ["pl", "en"]:
+        if lang == "pl":
+            css_path, js_path, nav_prefix, home = "css/style.css", "js/main.js", "", "index.html"
+            img_prefix = ""
+        else:
+            css_path, js_path, nav_prefix, home = "../css/style.css", "../js/main.js", "", "index.html"
+            img_prefix = "../"
+
+        # Slider HTML
+        slides = ""
+        dots = ""
+        for i, (src, alt) in enumerate(SLIDER_IMAGES):
+            slides += f'        <div class="slide"><img src="{img_prefix}{src}" alt="{esc(alt)}"></div>\n'
+            active = ' active' if i == 0 else ''
+            dots += f'        <button class="slider-dot{active}"></button>\n'
+
+        # Category strips
+        strips = ""
+        for idx, cat in enumerate(HOMEPAGE_CATS):
+            num = f"{idx+1:02d}"
+            href = cat["href"] if lang == "pl" else cat["href_en"]
+            label = cat["label"] if lang == "pl" else cat["label_en"]
+            full = cat["full"] if lang == "pl" else cat["full_en"]
+            img = f'{img_prefix}{cat["img"]}'
+
+            # Count
+            if cat["key"] == "wystawy":
+                count_text = "wystawy" if lang == "pl" else "exhibitions"
+            else:
+                n = len(all_works.get(cat["key"], []))
+                if lang == "pl":
+                    if n == 1: count_text = "1 praca"
+                    elif 2 <= n <= 4: count_text = f"{n} prace"
+                    else: count_text = f"{n} prac"
+                else:
+                    count_text = f"{n} works" if n != 1 else "1 work"
+
+            strips += f"""
+      <a class="v-category" href="{href}">
+        <div class="v-number">{num}</div>
+        <div class="v-label"><span>{esc(label)}</span></div>
+        <div class="v-image">
+          <img src="{img}" alt="{esc(full)}">
+          <div class="v-info">
+            <h3>{esc(full)}</h3>
+            <div class="v-count">{count_text}</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+"""
+
+        body = f"""      <div class="slider" id="slider">
+        <div class="slider-track" id="slider-track">
+{slides}        </div>
+      </div>
+      <div class="slider-dots" id="slider-dots">
+{dots}      </div>
+
+      <div class="v-categories">
+{strips}      </div>"""
+
+        title = "Izabela Chamczyk" if lang == "pl" else "Izabela Chamczyk"
+        html = make_page(lang, title, css_path, js_path, nav_prefix, home, body)
+
+        if lang == "pl":
+            (BASE / "index.html").write_text(html, encoding="utf-8")
+        else:
+            (BASE / "en" / "index.html").write_text(html, encoding="utf-8")
+
+    print("  Homepage (PL + EN) generated with vertical strings")
+
+    # ============================================
+    # GENERATE BIO PAGE
+    # ============================================
+    print("\n=== Generating bio page ===")
+
+    bio_intro_pl = """Artystka wizualna pracująca na styku malarstwa, performansu i wideo. Ukończyła malarstwo z wyróżnieniem na Akademii Sztuk Pięknych we Wrocławiu. W swojej praktyce rozwija autorską koncepcję malarstwa performatywnego, w którym obraz powstaje jako zapis działania, gestu i obecności ciała w czasie.
+
+Tworzy sztukę procesualną, sensualną i intensywnie cielesną, koncentrując się na relacji między materią, emocją i doświadczeniem widza. Jej prace często przekraczają ramy tradycyjnej ekspozycji, angażując odbiorcę w bezpośredni, afektywny kontakt i przenosząc sztukę poza neutralną przestrzeń galerii.
+
+Chamczyk jest stypendystką Ministra Kultury i Dziedzictwa Narodowego oraz KPO dla Kultury, finalistką m.in. konkursu Fundacji Vordemberge-Gildewart w MOCAK-u, Artystycznej Podróży Hestii, Biennale Malarstwa Bielska Jesień oraz konkursu im. Eugeniusza Gepperta. Prezentowała swoje prace w czołowych instytucjach sztuki w Polsce i za granicą, m.in. w Galerii Foksal, Muzeum Sztuki Nowoczesnej w Warszawie, Zachęcie — Miejscu Projektów, a także w Iranie, Izraelu i Rosji.
+
+Jej prace znajdują się w kolekcjach muzealnych i prywatnych w Polsce i za granicą, w tym w zbiorach Muzeów Narodowych, Archiwum Performansu MSN w Warszawie oraz kolekcjach instytucjonalnych i korporacyjnych."""
+
+    bio_intro_en = """Visual artist working at the intersection of painting, performance and video. She graduated with distinction in painting from the Academy of Fine Arts in Wrocław. In her practice, she develops an original concept of performative painting, in which the image is created as a record of action, gesture and bodily presence in time.
+
+She creates processual, sensual and intensely corporeal art, focusing on the relationship between matter, emotion and the viewer's experience. Her works often transcend the framework of traditional exhibition, engaging the viewer in direct, affective contact and moving art beyond the neutral gallery space.
+
+Chamczyk is a scholar of the Minister of Culture and National Heritage and KPO for Culture, finalist of the Vordemberge-Gildewart Foundation competition at MOCAK, Artistic Journey of Hestia, Bielska Jesień Painting Biennale and the Eugeniusz Geppert competition. She has presented her work at leading art institutions in Poland and abroad, including Foksal Gallery, Museum of Modern Art in Warsaw, Zachęta — Project Space, as well as in Iran, Israel and Russia.
+
+Her works are held in museum and private collections in Poland and abroad, including the National Museums, the Performance Archive of MSN in Warsaw, and institutional and corporate collections."""
+
+    # Structured exhibition data from CV
+    solo_exhibitions = {
+        2026: ["WOVENTRA, Ogród Botaniczny UW, Warszawa (stypendium KPO dla Kultury)"],
+        2025: ["WYROŚLE, Galeria Akademickie Centrum Designu, Łódź"],
+        2024: ["SKRUSZONE, performance, Galeria Ewa Opałka i Fundacja Pomoja, Warszawa",
+               "PUSH&PULL, Galeria XX1, Warszawa",
+               "POWIEM WSZYSTKIM, ŻE PŁAKAŁAŚ, BWA Olsztyn",
+               "BIO-Chem: MIĘDZY NAMI CHEMIA, MCSW Elektrownia, Radom"],
+        2023: ["KAŻDE 5 MINUT, performance, BigBook Festival, Warszawa",
+               "BOŻE CIAŁO, performance, XII Tyski Festiwal Performance",
+               "Performance F63.9, Galeria Vauxhall, Krzeszowice"],
+        2022: ["Performance ZADNURZENIE, Kongres Rzeźba Wszędzie?, Centrum Rzeźby Polskiej, Orońsko"],
+        2021: ["TOXIC, Galeria Foksal, Warszawa",
+               "Performance MEPHOBIA, XXIX Mały Festiwal Form Artystycznych, Nowy Sącz"],
+        2020: ["SERIOUSLY SALTY. Nowe materializacje, Galeria Entropia, Wrocław",
+               "Performance KONIEC KOŃCÓW (online), BWA Wrocław",
+               "Performance ZŁOTY ŚRODEK (online), lokal_30, Warszawa",
+               "Performance POCZĄTEK KOŃCA (online), CSW Kronika, Bytom",
+               "Performance CODZIENNOŚĆ W KORONIE (online), Galeria Entropia, Wrocław"],
+        2019: ["Coś tu nie GRA, performance, BWA Jelenia Góra",
+               "PNEUMA i performance SZCZELINA, Galeria Apteka Sztuki, Warszawa",
+               "Performance TAK BYŁO, benefis J. Robakowskiego, MSN Warszawa"],
+        2018: ["Abstrakcja jest Kobietą (z N. Załuską), Instytut Polski, Düsseldorf",
+               "SENSATION, Pawilon Sztuki Ergo Hestia, Warszawa",
+               "BEZDECH, Galeria Scena, Koszalin"],
+        2017: ["Performance UNIESIENIE, Nocny Szlak Kultury, MOS Gorzów Wlkp.",
+               "GRUBO i performance TAŃCZ, Galeria Apteka Sztuki, Warszawa"],
+        2016: ["MALARSTWO JAKO CHOROBA, Galeria Supermarket Sztuki, Warszawa",
+               "SYNERGIA, performance, Noc Muzeów, Galeria Supermarket Sztuki, Warszawa"],
+        2015: ["PSYCHOANIMALJA, stypendium MKiDN, WRO ART CENTER, Wrocław",
+               "TORN, performance z Farzad Azimbeik, SCC Gallery, Isfahan, Iran"],
+        2014: ["USTROJE, Galeria Arttrakt, Wrocław"],
+        2013: ["WOJNA DWUNASTOMIESIĘCZNA — 12 wystaw w 12 miastach Polski"],
+        2012: ["STANY SKUPIENIA, Galeria Entropia, Wrocław",
+               "Performance CISZA PRZED BURZĄ, Galeria Raczej, Poznań",
+               "Performance TAJEMNICA, MOS Gorzów Wlkp."],
+        2011: ["NIESKOŃCZONOŚĆ, performance, BWA Jelenia Góra",
+               "DO TWARZY MI W NIEBIESKIM, Galeria Entropia, Wrocław",
+               "POCZUCIE BEZPIECZEŃSTWA, performance, Galeria Szyperska, Poznań",
+               "DOTYKAJ, wystawa i performance, Galeria Strefa A, Kraków"],
+        2010: ["TO JUŻ ZOSTAŁO NAZWANE, BWA Zielona Góra",
+               "Kochaj mnie! i akcja ART ATAK, Galeria Arttrakt, Wrocław",
+               "NAZWIJ TO JAK CHCESZ, performance, Galeria Entropia, Wrocław"],
+        2009: ["Pokaz dyplomowy MALOWAĆ, performance z projekcjami, Wrocław",
+               "OBRAZ OKREŚLONY, Program Alternatywny TVP Kultura"],
+        2008: ["POZNANIE, Galeria Nowa, Poznań",
+               "ZBĘDNA SZTUKA, akcja, Wrocław"],
+        2007: ["ANTYWYSTAWA, Galeria BWA Studio, Wrocław",
+               "KTO OGLĄDA MOJE MALARSTWO?, Galeria KONT, Lublin"],
+        2006: ["…MALOWAĆ…, instalacja-performance, Galeria !Sputnik, Wrocław"],
+    }
+
+    group_exhibitions = {
+        2026: ["ŻYWA GALERIA II, projekt J. Robakowskiego, MSN Warszawa",
+               "Muzeum Jutra — cyfrowe modele i artefakty, Fundacja Rozwoju Społeczeństwa Kreatywnego"],
+        2025: ["Projekt biżuteria artystyczna, CSW Toruń",
+               "DZIEWCZYNKI, ArtAround Gallery, Warszawa"],
+        2024: ["Ćwiczenia z przemijania, BWA Olsztyn",
+               "Myślę i czuję 2024, konferencja AI — twórca czy tworzywo?, ASP Łódź"],
+        2023: ["XII Tyski Festiwal Performance — nowe media"],
+        2022: ["Bujność. 20-lecie Artystycznej Podróży Hestii, PGS Sopot",
+               "Festival del Cinema di Cefalù, Sycylia",
+               "Manifesta 14, Prisztina, Kosowo"],
+        2021: ["Tuchfühlung, Der Neue Gasteig HP 8 Gallery, Monachium",
+               "Hamar Performancefestival, Norwegia",
+               "7th Festival of Naked Forms, Praga",
+               "17th MÓZG Festival, Bydgoszcz",
+               "Videofenster 2021, Kolonia",
+               "Refugees Welcome, MSN Warszawa"],
+        2020: ["#LasRzeczy, Galeria Foksal, Warszawa (online)",
+               "Horyzont zdarzeń, Mediations Biennale Polska",
+               "NEWCOMERS, kolekcja PKO BP, Warsaw Gallery Weekend",
+               "60 Days of Lockdown, A4 Art Museum, Chiny"],
+        2019: ["Tylko zepsute zegary…, Gdańska Galeria Miejska 2",
+               "ANIMA MUNDI Festival, Wenecja",
+               "Musrara Mix Festival, performance, Jerozolima",
+               "BODY WORKS, PGS Sopot"],
+        2018: ["MatriarchArt, Kobro's Gallery, Łódź",
+               "PRZEDMIOTY AKTYWNE, Galeria ODA, Piotrków Trybunalski",
+               "INTERAKCJE, międzynarodowy festiwal performance"],
+        2017: ["CO Z TĄ ABSTRAKCJĄ?, Fundacja Gierowskiego, Warszawa"],
+        2016: ["Performance KWAS, Galeria Bardzo Biała, Warszawa",
+               "Festiwal Nowej Sztuki Labirynt, performance WSPÓŁODCZUWANIE, Słubice/Frankfurt",
+               "NOWE ILUSTRACJE, Galeria Arsenał, Białystok"],
+        2015: ["MALARKI, Galeria Biała, Lublin",
+               "CZYSTA FORMALNOŚĆ, Galeria Labirynt, Lublin"],
+        2014: ["Biennale Mediations, Poznań",
+               "E(rarta) MOTION PICTURES II, Sankt Petersburg",
+               "MIŁOŚĆ WŁASNA, PGS Sopot"],
+        2013: ["EPIDEMIC, CSW Toruń",
+               "ŚWIAT SIĘ ŚMIEJE, Galeria Klimy Boheńskiej, Warszawa"],
+        2012: ["6 Festiwal Performance Koła Czasu, CSW Toruń",
+               "SILESIA BIENNALE, Wałbrzych",
+               "INTERAKCJE — performance FASCYNACJA, Piotrków Trybunalski"],
+        2011: ["10. Konkurs Gepperta, BWA Wrocław",
+               "Triennale Młodych, Orońsko",
+               "Nagroda Fundacji Vordemberge-Gildewart, MOCAK, Kraków",
+               "1. Festiwal Konteksty, Sokołowsko"],
+        2010: ["UP SIDE DOWN INSIDE OUT, Berlin",
+               "Podwodny Wrocław, FALA/E/ SZTUKI"],
+        2009: ["Artystyczna Podróż Hestii (finał), Warszawa",
+               "PROMOCJE 2009 (finał), Przegląd Malarstwa Młodych"],
+    }
+
+    awards = [
+        ("2025", "Stypendium KPO dla Kultury"),
+        ("2020", "Stypendium Ministra Kultury i Dziedzictwa Narodowego — Kultura w sieci"),
+        ("2015", "Stypendium z budżetu Ministra Kultury i Dziedzictwa Narodowego"),
+        ("2015", "Nagroda OBIEG na Biennale Bielska Jesień"),
+        ("2015", "Grand Prix — One Minute Festival, Gdańsk"),
+        ("2014", "Nominacja — E(rarta) MOTION PICTURES II, Sankt Petersburg"),
+        ("2014", "Nominacja — Biennale Mediations, Poznań"),
+        ("2013", "Wyróżnienie honorowe — IN OUT, CSW Łaźnia, Gdańsk"),
+        ("2012", "I nagroda — VII Wałbrzyski Przegląd Filmów Niekonwencjonalnych"),
+        ("2011", "Nominacja — 10. Konkurs Gepperta, BWA Wrocław"),
+        ("2011", "Nominacja — 6. Triennale Młodych, Orońsko"),
+        ("2011", "Nominacja — Nagroda Fundacji Vordemberge-Gildewart, MOCAK"),
+        ("2010", "Stypendium Ministra Kultury i Dziedzictwa Narodowego — Młoda Polska"),
+        ("2010", "Nominacja do nagrody WARTO, Gazeta Wyborcza"),
+        ("2009", "Wyróżnienie za najlepszą pracę dyplomową, ASP Wrocław"),
+        ("2009", "Stypendium Artluk dla Młodego Twórcy"),
+    ]
+
+    education_activities = [
+        ("2020", "Partytury codzienności — warsztaty-wystawa online"),
+        ("2017", "Warsztaty performatywne SZMATA, Miejsce Projektów Zachęty, Warszawa"),
+        ("2017", "Warsztaty performatywne CREEPY, Muzeum Współczesne Wrocław"),
+        ("2017", "Warsztaty Bądź Awangardą, Muzeum Narodowe, Kraków"),
+        ("2016", "Warsztaty performance Ciała niebieskie, CSW Zamek Ujazdowski, Warszawa"),
+        ("2015", "Wykład i warsztaty, WRO Art Center, Wrocław"),
+        ("2015", "Warsztaty z Instytutem Etnologii UW — wystawa CARGO/(NIE)MATERIALNOŚĆ"),
+        ("2013", "Warsztaty SZTUKOwanie, MOS Gorzów Wlkp."),
+        ("2011", "Dyskusja o sztuce współczesnej, BWA Jelenia Góra"),
+    ]
+
+    def gen_bio_body(lang, img_prefix=""):
+        intro = bio_intro_pl if lang == "pl" else bio_intro_en
+        parts = []
+
+        # Bio nav
+        if lang == "pl":
+            nav_items = [
+                ("#solo", "Wystawy indywidualne"),
+                ("#group", "Wystawy zbiorowe"),
+                ("#awards", "Nagrody"),
+                ("#education", "Edukacja"),
+            ]
+        else:
+            nav_items = [
+                ("#solo", "Solo Exhibitions"),
+                ("#group", "Group Exhibitions"),
+                ("#awards", "Awards"),
+                ("#education", "Education"),
+            ]
+
+        bio_nav = '      <div class="bio-nav">\n'
+        for href, text in nav_items:
+            bio_nav += f'        <a href="{href}">{text}</a>\n'
+        bio_nav += '      </div>'
+        parts.append(bio_nav)
+
+        # Intro
+        parts.append('      <div class="bio-content">')
+        for para in intro.strip().split("\n\n"):
+            para = para.strip()
+            if para:
+                parts.append(f'        <p>{esc(para)}</p>')
+
+        # Solo exhibitions
+        solo_title = "Wystawy indywidualne" if lang == "pl" else "Solo Exhibitions"
+        parts.append(f'        <h3 id="solo">{solo_title}</h3>')
+        for year in sorted(solo_exhibitions.keys(), reverse=True):
+            parts.append(f'        <div class="year">{year}</div>')
+            for entry in solo_exhibitions[year]:
+                parts.append(f'        <div class="entry">{esc(entry)}</div>')
+
+        # Group exhibitions
+        group_title = "Wystawy zbiorowe" if lang == "pl" else "Group Exhibitions"
+        parts.append(f'        <h3 id="group">{group_title}</h3>')
+        for year in sorted(group_exhibitions.keys(), reverse=True):
+            parts.append(f'        <div class="year">{year}</div>')
+            for entry in group_exhibitions[year]:
+                parts.append(f'        <div class="entry">{esc(entry)}</div>')
+
+        # Awards
+        awards_title = "Nagrody i wyróżnienia" if lang == "pl" else "Awards &amp; Scholarships"
+        parts.append(f'        <h3 id="awards">{awards_title}</h3>')
+        current_year = ""
+        for yr, text in awards:
+            if yr != current_year:
+                parts.append(f'        <div class="year">{yr}</div>')
+                current_year = yr
+            parts.append(f'        <div class="entry">{esc(text)}</div>')
+
+        # Education
+        edu_title = "Działalność edukacyjna" if lang == "pl" else "Educational Activities"
+        parts.append(f'        <h3 id="education">{edu_title}</h3>')
+        current_year = ""
+        for yr, text in education_activities:
+            if yr != current_year:
+                parts.append(f'        <div class="year">{yr}</div>')
+                current_year = yr
+            parts.append(f'        <div class="entry">{esc(text)}</div>')
+
+        parts.append('      </div>')
+
+        return '      <h1 class="page-title">Bio</h1>\n' + "\n".join(parts)
+
+    for lang in ["pl", "en"]:
+        if lang == "pl":
+            bio_body = gen_bio_body("pl")
+            html = make_page("pl", "Bio", "css/style.css", "js/main.js", "", "index.html", bio_body)
+            (BASE / "bio.html").write_text(html, encoding="utf-8")
+        else:
+            bio_body = gen_bio_body("en", "../")
+            html = make_page("en", "Bio", "../css/style.css", "../js/main.js", "", "index.html", bio_body)
+            (BASE / "en" / "bio.html").write_text(html, encoding="utf-8")
+
+    print("  Bio (PL + EN) generated")
+
+    # ============================================
+    # GENERATE WYSTAWY / EXHIBITIONS PAGE
+    # ============================================
+    print("\n=== Generating wystawy/exhibitions page ===")
+
+    def gen_exhibitions_body(lang, img_prefix=""):
+        parts = []
+        if lang == "pl":
+            title = "Wystawy"
+            solo_title = "Wystawy i działania indywidualne"
+            group_title = "Wystawy i działania zbiorowe"
+        else:
+            title = "Exhibitions"
+            solo_title = "Solo Exhibitions &amp; Actions"
+            group_title = "Group Exhibitions &amp; Actions"
+
+        parts.append(f'      <h1 class="page-title">{title}</h1>')
+        parts.append('      <div class="exhibitions-list">')
+
+        parts.append(f'        <h3>{solo_title}</h3>')
+        for year in sorted(solo_exhibitions.keys(), reverse=True):
+            parts.append(f'        <div class="year-group">')
+            parts.append(f'          <div class="year">{year}</div>')
+            for entry in solo_exhibitions[year]:
+                parts.append(f'          <div class="entry">{esc(entry)}</div>')
+            parts.append(f'        </div>')
+
+        parts.append(f'        <h3>{group_title}</h3>')
+        for year in sorted(group_exhibitions.keys(), reverse=True):
+            parts.append(f'        <div class="year-group">')
+            parts.append(f'          <div class="year">{year}</div>')
+            for entry in group_exhibitions[year]:
+                parts.append(f'          <div class="entry">{esc(entry)}</div>')
+            parts.append(f'        </div>')
+
+        parts.append('      </div>')
+        return "\n".join(parts)
+
+    for lang in ["pl", "en"]:
+        if lang == "pl":
+            body = gen_exhibitions_body("pl")
+            html = make_page("pl", "Wystawy", "css/style.css", "js/main.js", "", "index.html", body)
+            (BASE / "wystawy.html").write_text(html, encoding="utf-8")
+        else:
+            body = gen_exhibitions_body("en", "../")
+            html = make_page("en", "Exhibitions", "../css/style.css", "../js/main.js", "", "index.html", body)
+            (BASE / "en" / "exhibitions.html").write_text(html, encoding="utf-8")
+
+    print("  Wystawy/Exhibitions (PL + EN) generated")
 
     print("\n=== Generating aktualnosci.html with real images ===")
     news_body = """      <h1 class="page-title">Aktualności</h1>

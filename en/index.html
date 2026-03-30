@@ -16,6 +16,7 @@
       <nav class="main-nav">
         <ul>
           <li><a href="works.html">Works</a></li>
+          <li><a href="exhibitions.html">Exhibitions</a></li>
           <li><a href="actions.html">Actions</a></li>
           <li><a href="news.html">News</a></li>
           <li><a href="bio.html">Bio</a></li>
@@ -27,63 +28,135 @@
         <a href="index.html">Izabela Chamczyk</a>
       </div>
     </header>
-
     <main>
-      <!-- Slider -->
-      <div class="slider">
-        <div class="slider-track">
-          <div class="slide">
-            <img src="../images/slider-1-malarstwo.jpg" alt="Painting">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-2-szczelina.jpg" alt="Szczelina">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-3-kwas.jpg" alt="Kwas">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-4-coswczyms.jpg" alt="Something in something">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-5-fascynacja.jpg" alt="Fascination">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-6-torn.jpg" alt="TORN">
-          </div>
-          <div class="slide">
-            <img src="../images/slider-7-nazwij.jpg" alt="Call it what you want">
-          </div>
+      <div class="slider" id="slider">
+        <div class="slider-track" id="slider-track">
+        <div class="slide"><img src="../images/slider-1-malarstwo.jpg" alt="Malarstwo"></div>
+        <div class="slide"><img src="../images/slider-2-szczelina.jpg" alt="Szczelina"></div>
+        <div class="slide"><img src="../images/slider-3-kwas.jpg" alt="Kwas"></div>
+        <div class="slide"><img src="../images/slider-4-coswczyms.jpg" alt="Coś w czymś"></div>
+        <div class="slide"><img src="../images/slider-5-fascynacja.jpg" alt="Fascynacja"></div>
+        <div class="slide"><img src="../images/slider-6-torn.jpg" alt="TORN"></div>
+        <div class="slide"><img src="../images/slider-7-nazwij.jpg" alt="Nazwij to jak chcesz"></div>
         </div>
       </div>
-      <div class="slider-dots">
-        <button class="slider-dot active" aria-label="Slide 1"></button>
-        <button class="slider-dot" aria-label="Slide 2"></button>
-        <button class="slider-dot" aria-label="Slide 3"></button>
-        <button class="slider-dot" aria-label="Slide 4"></button>
-        <button class="slider-dot" aria-label="Slide 5"></button>
-        <button class="slider-dot" aria-label="Slide 6"></button>
-        <button class="slider-dot" aria-label="Slide 7"></button>
+      <div class="slider-dots" id="slider-dots">
+        <button class="slider-dot active"></button>
+        <button class="slider-dot"></button>
+        <button class="slider-dot"></button>
+        <button class="slider-dot"></button>
+        <button class="slider-dot"></button>
+        <button class="slider-dot"></button>
+        <button class="slider-dot"></button>
       </div>
 
-      <!-- Category Grid -->
-      <div class="category-grid">
-        <a href="works.html" class="category-card">
+      <div class="v-categories">
+
+      <a class="v-category" href="exhibitions.html">
+        <div class="v-number">01</div>
+        <div class="v-label"><span>Exhibitions</span></div>
+        <div class="v-image">
+          <img src="../images/cat-wystawy.png" alt="Exhibitions">
+          <div class="v-info">
+            <h3>Exhibitions</h3>
+            <div class="v-count">exhibitions</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="malarstwo.html">
+        <div class="v-number">02</div>
+        <div class="v-label"><span>Painting</span></div>
+        <div class="v-image">
           <img src="../images/cat-malarstwo.png" alt="Painting">
-          <div class="label">Painting</div>
-        </a>
-        <a href="actions.html" class="category-card">
+          <div class="v-info">
+            <h3>Painting</h3>
+            <div class="v-count">86 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="performance.html">
+        <div class="v-number">03</div>
+        <div class="v-label"><span>Performance</span></div>
+        <div class="v-image">
           <img src="../images/cat-performance.png" alt="Performance">
-          <div class="label">Performance</div>
-        </a>
-        <a href="works.html" class="category-card">
+          <div class="v-info">
+            <h3>Performance</h3>
+            <div class="v-count">37 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="video.html">
+        <div class="v-number">04</div>
+        <div class="v-label"><span>Video</span></div>
+        <div class="v-image">
           <img src="../images/cat-video.png" alt="Video">
-          <div class="label">Video</div>
-        </a>
+          <div class="v-info">
+            <h3>Video</h3>
+            <div class="v-count">12 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="instalacje.html">
+        <div class="v-number">05</div>
+        <div class="v-label"><span>Installations</span></div>
+        <div class="v-image">
+          <img src="../images/cat-instalacje.png" alt="Installations">
+          <div class="v-info">
+            <h3>Installations</h3>
+            <div class="v-count">6 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="fotografia.html">
+        <div class="v-number">06</div>
+        <div class="v-label"><span>Photography</span></div>
+        <div class="v-image">
+          <img src="../images/cat-fotografia.png" alt="Photography">
+          <div class="v-info">
+            <h3>Photography</h3>
+            <div class="v-count">4 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="wojna.html">
+        <div class="v-number">07</div>
+        <div class="v-label"><span>12-Month War</span></div>
+        <div class="v-image">
+          <img src="../images/cat-wojna.png" alt="Twelve-Month War">
+          <div class="v-info">
+            <h3>Twelve-Month War</h3>
+            <div class="v-count">11 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
+
+      <a class="v-category" href="warsztaty.html">
+        <div class="v-number">08</div>
+        <div class="v-label"><span>Workshops</span></div>
+        <div class="v-image">
+          <img src="../images/cat-warsztaty.png" alt="Workshops">
+          <div class="v-info">
+            <h3>Workshops</h3>
+            <div class="v-count">3 works</div>
+          </div>
+        </div>
+        <div class="v-accent"></div>
+      </a>
       </div>
     </main>
-
-    <div class="mobile-preview-toggle"><button onclick="toggleMobilePreview()" title="Mobile preview">&#128241;</button></div>
-
     <footer class="site-footer">
       &copy; 2026 / <a href="index.html">Izabela Chamczyk</a> / <a href="#">Credits</a>
     </footer>
